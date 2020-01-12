@@ -10,7 +10,7 @@ class FFF(commands.AutoShardedBot):
         self.config = Handlers.JSON.read("config")
 
     async def load_extensions(self):
-        extensions = ["general", "testing"]
+        extensions = ["general", "applications"]
         for extension in extensions:
             self.load_extension(f"extensions.{extension}")
             print(f"Loaded {extension}.")
