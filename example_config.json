@@ -1,0 +1,14 @@
+{
+    "token": "token",
+    "prefix": "f!",
+    "activity": {
+        "name": "f.apply",
+        "type": "listening"
+    },
+    "key": "/api",
+    "applicant_category": 0,
+    "staff_role": 0,
+    "min_total_slayer_xp": 0,
+    "min_bank": 0,
+    "average_skill_level": 20
+}

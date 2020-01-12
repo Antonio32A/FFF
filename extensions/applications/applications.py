@@ -6,28 +6,24 @@ from datetime import datetime
 
 from util import Handlers
 
-class Testing(commands.Cog, name="Testing"):
+class Applications(commands.Cog, name="Applications"):
     def __init__(self, fff):
         self.fff = fff
         self.api = Handlers.Skyblock(self.fff.config["key"])
+        self.applicant_category = self.fff.config["applicant_category"]
+        self.staff_role = self.fff.config["staff_role"]
+        self.min_total_slayer_xp = self.fff.config["min_total_slayer_xp"]
+        self.min_bank = self.fff.config["min_bank"]
+        self.min_average_skill_level = self.fff.config["min_average_skill_level"]
         with open("skills.json") as file:
             self.skill_xp = json.load(file)
-
-    @commands.command()
-    async def help(self, ctx):
-        """
-            TODO: Complete "help" command
-        """
-        embed = discord.Embed(title="FinalFloorFrags Help Commands!", color=ctx.author.color)
-        embed.add_field(name="General Commands:", value="• f!help | Help Command List.\n• f!about | About FFF.\n• f!members | Lists current members.\n", inline=False)
-        embed.set_footer(text="FinalFloorFrags © 2020")
-        await ctx.send(embed=embed)
 
     @commands.command()
     async def apply(self, ctx, username: str=None, profile_name: str=None):
         if username == None or profile_name == None:
             return await ctx.send("Invalid arguments. Please specify your username and your profile name.")
         message = await ctx.send("Loading...")
+
         try:
             profile_name = profile_name.capitalize()
             uuid = await self.api.get_player_uuid(username)
@@ -97,12 +93,12 @@ class Testing(commands.Cog, name="Testing"):
         await message.delete()
 
         results = await ctx.send("Please wait, checking requirements...")
-        if (total_slayer_xp > 100000 and bank > 5000000 and average_skill_level > 20):
+        if (total_slayer_xp > self.min_total_slayer_xp and bank > self.min_bank and average_skill_level > self.min_average_skill_level):
             embed = discord.Embed(title=":white_check_mark: Requirement Check **PASSED**!", description="You're eligible to join FinalFloorFrags!\nYou've been added to a wait list queue and will be notified when there is a space.\n\nThanks for applying and have a great day! :heart:", color=ctx.author.color)
             embed.set_footer(text="FinalFloorFrags © 2020")
 
-            category = ctx.guild.get_channel(665859638545219586)
-            role = ctx.guild.get_role(654847635118620691)
+            category = ctx.guild.get_channel(self.applicant_category)
+            role = ctx.guild.get_role(self.staff_role)
             overwrites = {
                 ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
                 ctx.author: discord.PermissionOverwrite(read_messages=True, send_messages=True),

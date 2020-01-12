@@ -22,8 +22,8 @@ class FFF(commands.AutoShardedBot):
         await self.change_presence(activity=activity)
 
     async def on_ready(self):
-        self.remove_command('help')
         print("Starting...")
+        self.remove_command("help")
         await self.load_extensions()
         await self.update_activity()
         print(f"Logged in as {self.user} ({self.user.id})")
@@ -39,4 +39,4 @@ def get_pre(fff, message):
     l = [f"<@{id}> ", f"<@!{id}> ", fff.config["prefix"]]
     return l
 
-fff = FFF(command_prefix=get_pre, owner_id=166630166825664512)
+fff = FFF(command_prefix=get_pre, owner_ids=(166630166825664512, 561767766605037568))

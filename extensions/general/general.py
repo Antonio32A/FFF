@@ -15,3 +15,13 @@ class General(commands.Cog, name="General"):
         ping = round(ping)
         await message.delete()
         return await ctx.send(f"Pong, {ping}ms")
+
+    @commands.command()
+    async def help(self, ctx):
+        """
+            TODO: Complete "help" command
+        """
+        embed = discord.Embed(title="FinalFloorFrags Help Commands!", color=ctx.author.color)
+        embed.add_field(name="General Commands:", value="• f!help | Help Command List.\n• f!about | About FFF.\n• f!members | Lists current members.\n", inline=False)
+        embed.set_footer(text="FinalFloorFrags © 2020")
+        await ctx.send(embed=embed)
