@@ -1,7 +1,5 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands import CommandNotFound
-import typing
 from util.handlers import Handlers
 
 class FFF(commands.AutoShardedBot):
@@ -29,12 +27,12 @@ class FFF(commands.AutoShardedBot):
         print(f"Logged in as {self.user} ({self.user.id})")
 
     async def on_command_error(self, ctx, error):
-        if isinstance(error, CommandNotFound):
+        if isinstance(error, commands.CommandNotFound):
             embed = discord.Embed(title=":x: Invalid Command!", description="Please refer to the **help** command and try again.", color=ctx.author.color)
             embed.set_footer(text="FinalFloorFrags © 2020")
             return await ctx.send(embed=embed)
-            
-        elif isinstance(error, CommandOnCooldown):
+
+        elif isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(title=":x: On Cooldown!", description=f"Please try again in {str(error.retry_after)} seconds.", color=ctx.author.color)
             embed.set_footer(text="FinalFloorFrags © 2020")
             return await ctx.send(embed=embed)
