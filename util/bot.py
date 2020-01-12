@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands import CommandNotFound
 import typing
 from util.handlers import Handlers
 
@@ -21,10 +22,17 @@ class FFF(commands.AutoShardedBot):
         await self.change_presence(activity=activity)
 
     async def on_ready(self):
+        self.remove_command('help')
         print("Starting...")
         await self.load_extensions()
         await self.update_activity()
         print(f"Logged in as {self.user} ({self.user.id})")
+
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, CommandNotFound):
+            embed = discord.Embed(title=":x: Invalid Command!", description="Please refer to the **help** command and try again.", color=ctx.author.color)
+            embed.set_footer(text="FinalFloorFrags © 2020")
+            return await ctx.send(embed=embed)
 
 def get_pre(fff, message):
     id = fff.user.id
