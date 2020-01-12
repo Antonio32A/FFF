@@ -33,6 +33,13 @@ class Handlers:
                         data = await data.text()
             return json.loads(data)["profile"]
 
+        async def get_guild(self, guild_id: str):
+            async with aiohttp.ClientSession() as session:
+                    async with session.get(f"https://api.hypixel.net/guild", params={"key": self.key, "guild_id": guild_id}) as data:
+                        data = await data.text()
+            return json.loads(data)["guild"]
+
+
         async def get_skyblock_profile_ids(self, uuid: str):
             async with aiohttp.ClientSession() as session:
                     async with session.get(f"https://api.hypixel.net/player", params={"key": self.key, "uuid": uuid}) as data:
