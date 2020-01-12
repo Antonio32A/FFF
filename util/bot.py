@@ -33,6 +33,11 @@ class FFF(commands.AutoShardedBot):
             embed = discord.Embed(title=":x: Invalid Command!", description="Please refer to the **help** command and try again.", color=ctx.author.color)
             embed.set_footer(text="FinalFloorFrags © 2020")
             return await ctx.send(embed=embed)
+            
+        elif isinstance(error, CommandOnCooldown):
+            embed = discord.Embed(title=":x: On Cooldown!", description=f"Please try again in {str(error.retry_after)} seconds.", color=ctx.author.color)
+            embed.set_footer(text="FinalFloorFrags © 2020")
+            return await ctx.send(embed=embed)
 
 def get_pre(fff, message):
     id = fff.user.id
