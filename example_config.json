@@ -10,5 +10,5 @@
     "staff_role": 0,
     "min_total_slayer_xp": 0,
     "min_bank": 0,
-    "average_skill_level": 20
+    "min_average_skill_level": 20
 }
