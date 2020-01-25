@@ -11,6 +11,7 @@ class Applications(commands.Cog, name="Applications"):
         self.fff = fff
         self.api = Handlers.Skyblock(self.fff.config["key"])
         self.applicant_category = self.fff.config["applicant_category"]
+        self.apply_channel = self.fff.config["apply_channel"]
         self.staff_role = self.fff.config["staff_role"]
         self.min_total_slayer_xp = self.fff.config["min_total_slayer_xp"]
         self.min_bank = self.fff.config["min_bank"]

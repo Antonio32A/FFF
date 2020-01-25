@@ -7,6 +7,7 @@
     },
     "key": "/api",
     "applicant_category": 0,
+    "apply_channel": 0,
     "staff_role": 0,
     "min_total_slayer_xp": 0,
     "min_bank": 0,
