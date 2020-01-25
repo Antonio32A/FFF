@@ -20,7 +20,6 @@ class FFF(commands.AutoShardedBot):
         await self.change_presence(activity=activity)
 
     async def on_ready(self):
-        print("Starting...")
         self.remove_command("help")
         await self.load_extensions()
         await self.update_activity()

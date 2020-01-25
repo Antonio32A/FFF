@@ -18,9 +18,13 @@ class Applications(commands.Cog, name="Applications"):
         with open("skills.json") as file:
             self.skill_xp = json.load(file)
 
+
     @commands.command()
     @commands.cooldown(1, 60.0, commands.BucketType.member)
     async def apply(self, ctx, username: str=None, profile_name: str=None):
+        if not ctx.channel.id == self.apply_channel:
+            return
+
         if username == None or profile_name == None:
             return await ctx.send("Invalid arguments. Please specify your username and your profile name.")
         message = await ctx.send("Loading...")

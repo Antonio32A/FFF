@@ -10,5 +10,22 @@
     "staff_role": 0,
     "min_total_slayer_xp": 0,
     "min_bank": 0,
-    "min_average_skill_level": 20
+    "min_average_skill_level": 20,
+    "emojis": {
+        "farming": "",
+        "mining": "",
+        "combat": "",
+        "foraging": "",
+        "fishing": "",
+        "enchanting": "",
+        "alchemy": "",
+        "profile": "",
+        "fairysouls": "",
+        "bank": "",
+        "purse": "",
+        "slayer": "",
+        "zombie": "",
+        "tarantula": "",
+        "wolf": ""
+    }
 }
