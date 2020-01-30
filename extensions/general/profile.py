@@ -18,19 +18,32 @@ class Profile(commands.Cog, name="Profile"):
 
     @commands.command()
     async def profile(self, ctx, username: str=None, profile_name: str=None):
-        if username == None or profile_name == None:
-            return await ctx.send("Invalid arguments. Please specify your username and your profile name.")
+        if username == None:
+            return await ctx.send("Invalid arguments. Please specify your username.")
 
-        message = await ctx.send("Loading...")
+        message = await ctx.send("Loading... This might take a few seconds.")
         try:
-            profile_name = profile_name.capitalize()
             uuid = await self.api.get_player_uuid(username)
             profile_ids = await self.api.get_skyblock_profile_ids(uuid)
+            embeds = []
+        except:
+            return await ctx.send("An error has occured!\nYour API might be off, Hypixel/Mojang API might be down or your username is incorrect.")
+
+        if profile_name == None:
+            profile_timestamps = {}
+            for profile_id in profile_ids:
+                profile = await self.api.get_skyblock_profile(uuid, profile_ids[profile_id])
+                last_save = profile["members"][uuid]["last_save"]
+                last_save = datetime.fromtimestamp(last_save/1000)
+                last_save_diff = (datetime.now() - last_save).total_seconds()
+                profile_timestamps[profile_id] = last_save_diff
+            profile_name = min(profile_timestamps, key=profile_timestamps.get)
+
+        try:
+            profile_name = profile_name.capitalize()
             profile_id = profile_ids[profile_name]
-            skin = f"https://minotar.net/helm/{uuid}/100.png"
             profile = await self.api.get_skyblock_profile(uuid, profile_id)
             player = profile["members"][uuid]
-            embeds = []
         except:
             return await ctx.send("An error has occured!\nYour API might be off or the profile name/username might be incorrect.")
 
