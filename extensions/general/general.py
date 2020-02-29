@@ -29,3 +29,6 @@ class General(commands.Cog, name="General"):
 
         help_embed.set_footer(text="FinalFloorFrags © 2020")
         await ctx.send(embed=help_embed)
+
+def setup(fff):
+    fff.add_cog(General(fff))

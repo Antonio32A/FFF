@@ -39,7 +39,6 @@ class Handlers:
                         data = await data.text()
             return json.loads(data)["guild"]
 
-
         async def get_skyblock_profile_ids(self, uuid: str):
             async with aiohttp.ClientSession() as session:
                     async with session.get(f"https://api.hypixel.net/player", params={"key": self.key, "uuid": uuid}) as data:
@@ -49,3 +48,14 @@ class Handlers:
             for profile in profile_ids:
                 new_profile_ids[profile_ids[profile]["cute_name"]] = profile
             return new_profile_ids
+
+        async def get_skyblock_unclaimed_auctions(self, profile_id: str):
+            async with aiohttp.ClientSession() as session:
+                    async with session.get(f"https://api.hypixel.net/skyblock/auction", params={"key": self.key, "profile": profile_id}) as data:
+                        data = await data.text()
+            ahs = []
+            auctions = json.loads(data)["auctions"]
+            for i in auctions:
+                if i["claimed"] == False:
+                    ahs.append(i)
+            return ahs
