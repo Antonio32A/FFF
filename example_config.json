@@ -6,6 +6,8 @@
         "type": "listening"
     },
     "key": "/api",
+    "guild": 0,
+    "bazaar_channel": 0,
     "applicant_category": 0,
     "apply_channel": 0,
     "staff_role": 0,
