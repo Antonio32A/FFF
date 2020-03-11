@@ -126,7 +126,7 @@ class Applications(commands.Cog, name="Applications"):
 
         else:
             embed = discord.Embed(title=":x: Requirement Check FAILED!", description="Unfortunately at this current moment you dont meet the requirements to join the wait list for FinalFloorFrags, please try again in the future!", color=ctx.author.color)
-            embed.add_field(name="Requirements:", value="• 200K+ Slayer XP\n• 5M+ Coins in Bank\n• Average Skill lvl 20^", inline=False)
+            embed.add_field(name="Requirements:", value="• 350+ Slayer XP\n• 5M+ Coins in Bank\n• Average Skill lvl 21.5^\n• 100M Networth", inline=False)
             embed.set_footer(text="FinalFloorFrags © 2020")
 
         await ctx.send(embed=embed)
