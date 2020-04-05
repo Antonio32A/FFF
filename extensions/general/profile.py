@@ -192,6 +192,7 @@ class Profile(commands.Cog, name="Profile"):
         slayers.add_field(name=f"{self.emojis['zombie']} | Reventant Horror", value=format_slayer_info("zombie"), inline=False)
         slayers.add_field(name=f"{self.emojis['spider']} | Tarantula Broodfather", value=format_slayer_info("spider"), inline=False)
         slayers.add_field(name=f"{self.emojis['wolf']} | Sven Packmaster", value=format_slayer_info("wolf"), inline=False)
+        slayers.add_field(name=f"{self.emojis['slayer']} | Total Slayer XP", value=f"{total_slayer_xp:,.0f}")
         embeds.append(slayers)
 
         pet_text = ""

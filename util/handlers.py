@@ -61,3 +61,7 @@ class Handlers:
         async def get_skyblock_bazaar(self, productId: str):
             data = await self.skyblock_api_request("skyblock/bazaar/product", {"key": self.key, "productId": productId})
             return data
+
+        async def get_guild(self, guildId: str):
+            data = await self.skyblock_api_request("guild", {"key": self.key, "id": guildId})
+            return data["guild"]
