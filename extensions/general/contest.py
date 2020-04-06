@@ -103,12 +103,14 @@ class Contest(commands.Cog, name="Contest"):
             skill = arg2.lower()
             cursor.execute("SELECT *, current_%s - start_%s as difference FROM %s ORDER BY difference DESC" % (skill, skill, table))
             result = cursor.fetchall()
-            content = "\n\n```"
+            content = "\n\n**Top 70 players in %s**\n```" % skill
             i = 0
             for player in result:
                 if player[17] == 0:
                     continue
                 i += 1
+                if i > 70:
+                    break
                 name = player[4]
                 xp = player[17]
                 content += "\n#%s: %s (%s xp)" % (i, name, f"{xp:,.0f}")
@@ -151,8 +153,10 @@ class Contest(commands.Cog, name="Contest"):
                     content += "\n#%s: %s (%s xp)" % (position, name, f"{xp:,.0f}")
                 content += "```"
             if len(result) > 10:
-                content += "\n```"
+                content += "\n**TOP 69**\n```"
                 for i in range(10, len(result) - 1):
+                    if i == 69:
+                        break
                     player = result[i]
                     position = player[16]
                     name = player[4]
