@@ -124,9 +124,9 @@ class Contest(commands.Cog, name="Contest"):
             embed = discord.Embed(title="Total Event XP Leaderboard", description=diff, color=ctx.author.color)
             cursor.execute("SELECT * FROM %s ORDER BY total_increment DESC" % table)
             result = cursor.fetchall()
-            content = "\n"
+            embed = discord.Embed(title="Total Event XP Leaderboard", description=diff, color=ctx.author.color)
             if len(result) != 0:
-                content += "\n**TOP 3**\n```fix"
+                content = "```fix"
                 for i in range(3):
                     player = result[i]
                     position = player[16]
@@ -134,8 +134,9 @@ class Contest(commands.Cog, name="Contest"):
                     xp = player[15]
                     content += "\n#%s: %s (%s xp)" % (position, name, f"{xp:,.0f}")
                 content += "```"
+                embed.add_field(name="**TOP 3**", value=content, inline=False)
             if len(result) > 3:
-                content += "\n**TOP 5**\n```glsl"
+                content = "```glsl"
                 for i in range(3, 5):
                     player = result[i]
                     position = player[16]
@@ -143,8 +144,9 @@ class Contest(commands.Cog, name="Contest"):
                     xp = player[15]
                     content += "\n#%s: %s (%s xp)" % (position, name, f"{xp:,.0f}")
                 content += "```"
+                embed.add_field(name="**TOP 5**", value=content, inline=False)
             if len(result) > 5:
-                content += "\n**TOP 10**\n```md"
+                content = "```md"
                 for i in range(5, 10):
                     player = result[i]
                     position = player[16]
@@ -152,10 +154,11 @@ class Contest(commands.Cog, name="Contest"):
                     xp = player[15]
                     content += "\n#%s: %s (%s xp)" % (position, name, f"{xp:,.0f}")
                 content += "```"
+                embed.add_field(name="**TOP 10**", value=content, inline=False)
             if len(result) > 10:
-                content += "\n**TOP 69**\n```"
+                content = "```"
                 for i in range(10, len(result) - 1):
-                    if i == 69:
+                    if i == 45:
                         break
                     player = result[i]
                     position = player[16]
@@ -165,7 +168,7 @@ class Contest(commands.Cog, name="Contest"):
                         continue
                     content += "\n#%s: %s (%s xp)" % (position, name, f"{xp:,.0f}")
                 content += "```"
-            embed = discord.Embed(title="Total Event XP Leaderboard", description=diff + content + "\n\n", color=ctx.author.color)
+                embed.add_field(name="**TOP 45**", value=content, inline=False)
             embed.set_footer(text="FinalFloorFrags © 2020")
             embed.set_thumbnail(url="https://image.flaticon.com/icons/png/512/199/199774.png")
             db.close()
