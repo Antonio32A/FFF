@@ -158,7 +158,7 @@ class Contest(commands.Cog, name="Contest"):
             if len(result) > 10:
                 content = "```"
                 for i in range(10, len(result) - 1):
-                    if i == 45:
+                    if i == 40:
                         break
                     player = result[i]
                     position = player[16]
@@ -168,7 +168,7 @@ class Contest(commands.Cog, name="Contest"):
                         continue
                     content += "\n#%s: %s (%s xp)" % (position, name, f"{xp:,.0f}")
                 content += "```"
-                embed.add_field(name="**TOP 45**", value=content, inline=False)
+                embed.add_field(name="**TOP 40**", value=content, inline=False)
             embed.set_footer(text="FinalFloorFrags © 2020")
             embed.set_thumbnail(url="https://image.flaticon.com/icons/png/512/199/199774.png")
             db.close()
