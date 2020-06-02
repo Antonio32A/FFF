@@ -172,16 +172,19 @@ class Handlers:
             skill_levels = {}
 
             for skill in self.skills:
-                xp = player_profile[skill]
-                if xp < self.skill_xp['1']:
-                    skill_levels[skill] = 0
-                    break
-
-                for i in range(50, 0, -1):
-                    required_xp = self.skill_xp[str(i)]
-                    if xp > required_xp:
-                        skill_levels[skill] = i
+                try:
+                    xp = player_profile[skill]
+                    if xp < self.skill_xp['1']:
+                        skill_levels[skill] = 0
                         break
+
+                    for i in range(50, 0, -1):
+                        required_xp = self.skill_xp[str(i)]
+                        if xp > required_xp:
+                            skill_levels[skill] = i
+                            break
+                except KeyError:
+                    skill_levels[skill] = 0
 
             skill_levels['average_skill_level'] = sum(skill_levels.values()) / 7
             return skill_levels
@@ -200,17 +203,19 @@ class Handlers:
             slayer_bosses = {}
 
             for slayer_boss in slayers:
-                money_spent = 0
-                tiers = [0, 1, 2, 3]
-                tier_money = [100, 2000, 10000, 50000]
+                if 'xp' in slayers[slayer_boss]:
+                    money_spent = 0
+                    tiers = [0, 1, 2, 3]
+                    tier_money = [100, 2000, 10000, 50000]
 
-                for tier in tiers:
-                    if slayer_boss in slayers:
-                        money_spent += slayers[slayer_boss][f'boss_kills_tier_{tier}'] * tier_money[tier]
+                    for tier in tiers:
+                        if f'boss_kills_tier_{tier}' in slayers:
+                            money_spent += slayers[slayer_boss][f'boss_kills_tier_{tier}'] * tier_money[tier]
 
-                slayer_bosses[slayer_boss] = {"xp": slayers[slayer_boss]['xp'], "money_spent": money_spent}
-                total_slayer_xp += slayers[slayer_boss]['xp']
-
+                    slayer_bosses[slayer_boss] = {"xp": slayers[slayer_boss]['xp'], "money_spent": money_spent}
+                    total_slayer_xp += slayers[slayer_boss]['xp']
+                else:
+                    slayer_bosses[slayer_boss] = {"xp": 0, "money_spent": 0}
             slayer_bosses['total'] = total_slayer_xp
             return slayer_bosses
 
