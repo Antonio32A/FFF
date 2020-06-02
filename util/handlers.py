@@ -209,8 +209,10 @@ class Handlers:
                     tier_money = [100, 2000, 10000, 50000]
 
                     for tier in tiers:
-                        if f'boss_kills_tier_{tier}' in slayers:
+                        try:
                             money_spent += slayers[slayer_boss][f'boss_kills_tier_{tier}'] * tier_money[tier]
+                        except KeyError:
+                            pass
 
                     slayer_bosses[slayer_boss] = {"xp": slayers[slayer_boss]['xp'], "money_spent": money_spent}
                     total_slayer_xp += slayers[slayer_boss]['xp']
