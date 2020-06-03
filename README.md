@@ -1,6 +1,11 @@
 # FFF
 [![discord](https://img.shields.io/discord/654847187305365515?logo=discord&style=for-the-badge)](https://discord.gg/uv7SGvz)
 
+[![license](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)](LICENSE)
+[![python](https://img.shields.io/badge/python-v3.8.2-blue?style=for-the-badge)](https://www.python.org/downloads/release/python-382/)
+[![github commit activity](https://img.shields.io/github/commit-activity/y/Antonio32A/FFF?style=for-the-badge)](https://github.com/Antonio32A/FFF/commits)
+[![code size](https://img.shields.io/github/languages/code-size/Antonio32A/FFF?style=for-the-badge)](https://github.com/Antonio32A/FFF)
+
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com)
@@ -10,13 +15,6 @@
 [![forthebadge](https://forthebadge.com/images/badges/mom-made-pizza-rolls.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/check-it-out.svg)](https://forthebadge.com)
-
-[![license](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)](LICENSE)
-[![python](https://img.shields.io/badge/python-v3.8.2-blue?style=for-the-badge)](https://www.python.org/downloads/release/python-382/)
-[![github commit activity](https://img.shields.io/github/commit-activity/y/Antonio32A/FFF?style=for-the-badge)](https://github.com/Antonio32A/FFF/commits)
-
-[![lines of code](https://tokei.rs/b1/github/Antonio32A/FFF)](https://github.com/Antonio32A/FFF)
-[![code size](https://img.shields.io/github/languages/code-size/Antonio32A/FFF?style=flat-square)](https://github.com/Antonio32A/FFF)
 
 A simple Discord bot written in discord.py for Discord guild of the Final Floor Frags guild on Hypixel.
 
