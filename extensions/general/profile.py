@@ -40,6 +40,7 @@ class Profile(commands.Cog, name="Profile"):
             return await ctx.send("That username doesn't exist!")
 
         profiles = await self.skyblock.get_profiles(uuid)
+        hypixel_profile = await self.skyblock.get_hypixel_profile(uuid)
         if not profiles:
             await message.delete()
             return await ctx.send("That person doesn't have any profiles!")
@@ -48,7 +49,7 @@ class Profile(commands.Cog, name="Profile"):
         profile = self.skyblock.calculate_latest_profile(profiles, uuid)
         player_profile = profile['members'][uuid]
 
-        skills_data = self.skyblock.calculate_profile_skills(profile, uuid)
+        skills_data = self.skyblock.calculate_profile_skills(profile, hypixel_profile, uuid)
         slayers_data = self.skyblock.calculate_profile_slayers(profile, uuid)
         pets_data = self.skyblock.calculate_profile_pets(profile, uuid)
         await message.edit(content="Loading... Successfully calculated the data, creating embeds...")

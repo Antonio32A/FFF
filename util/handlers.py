@@ -60,15 +60,15 @@ class Handlers:
             self.session = aiohttp.ClientSession()
 
             self.skill_xp = Handlers.JSON.read("skills")
-            self.skills = [
-                "experience_skill_combat",
-                "experience_skill_mining",
-                "experience_skill_alchemy",
-                "experience_skill_farming",
-                "experience_skill_enchanting",
-                "experience_skill_fishing",
-                "experience_skill_foraging"
-            ]
+            self.skills = {
+                "experience_skill_combat": "skyblock_combat",
+                "experience_skill_mining": "skyblock_excavator",
+                "experience_skill_alchemy": "skyblock_concoctor",
+                "experience_skill_farming": "skyblock_harvester",
+                "experience_skill_enchanting": "skyblock_augmentation",
+                "experience_skill_fishing": "skyblock_angler",
+                "experience_skill_foraging": "skyblock_gatherer"
+            }
 
             self.pet_levels = Handlers.JSON.read("pet_rarity")
 
@@ -88,6 +88,15 @@ class Handlers:
                 return data
             else:
                 raise Exception(data['cause'])
+
+        async def get_hypixel_profile(self, uuid):
+            """
+            Gets the Hypixel profile of a user
+            :param (str) uuid: Player's UUID
+            :returns (dict) profiles: Player's Hypixel profile
+            """
+            data = await self.api_request("player", {"key": self.key, "uuid": uuid})
+            return data['player']
 
         async def get_profiles(self, uuid):
             """
@@ -161,17 +170,18 @@ class Handlers:
 
             return profile_data[profile_id]
 
-        def calculate_profile_skills(self, profile, uuid):
+        def calculate_profile_skills(self, profile, hypixel_profile, uuid):
             """
             Calculates Hypixel SkyBlock profile's skills
             :param (dict) profile: The profile which should be used to calculate Hypixel SkyBlock skills
+            :param (dict) hypixel_profile: Hypixel profile of the person
             :param (str) uuid: The UUID of the person to calculate the skills
             :returns (list) skill_levels: A list of all Hypixel SkyBlock profile's skills and the average skill level
             """
             player_profile = profile['members'][uuid]
             skill_levels = {}
 
-            for skill in self.skills:
+            for skill in self.skills.keys():
                 try:
                     xp = player_profile[skill]
                     if xp < self.skill_xp['1']:
@@ -184,7 +194,7 @@ class Handlers:
                             skill_levels[skill] = i
                             break
                 except KeyError:
-                    skill_levels[skill] = 0
+                    skill_levels[skill] = hypixel_profile['achievements'][self.skills[skill]]
 
             skill_levels['average_skill_level'] = sum(skill_levels.values()) / 7
             return skill_levels

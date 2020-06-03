@@ -40,6 +40,7 @@ class Applications(commands.Cog, name="Applications"):
             return await ctx.send("That username doesn't exist!")
 
         profiles = await self.skyblock.get_profiles(uuid)
+        hypixel_profile = await self.skyblock.get_hypixel_profile(uuid)
         if not profiles:
             await message.delete()
             return await ctx.send("That person doesn't have any profiles!")
@@ -47,7 +48,11 @@ class Applications(commands.Cog, name="Applications"):
 
         profile = self.skyblock.calculate_latest_profile(profiles, uuid)
         total_slayer_xp = self.skyblock.calculate_profile_slayers(profile, uuid)['total']
-        average_skill_level = self.skyblock.calculate_profile_skills(profile, uuid)['average_skill_level']
+        average_skill_level = self.skyblock.calculate_profile_skills(
+            profile,
+            hypixel_profile,
+            uuid
+        )['average_skill_level']
         average_skill_level = round(float(average_skill_level), 1)
 
         try:
