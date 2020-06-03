@@ -61,7 +61,10 @@ class Profile(commands.Cog, name="Profile"):
         except KeyError:
             pass
 
-        fairy_souls_data = player_profile['fairy_souls_collected']
+        try:
+            fairy_souls_data = player_profile['fairy_souls_collected']
+        except KeyError:
+            fairy_souls_data = 0
         main_text += f"{self.emojis['fairysouls']} | **Fairy Souls:** `{fairy_souls_data}/194`\n"
 
         last_logged_in = datetime.fromtimestamp(player_profile['last_save'] / 1000)

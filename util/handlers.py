@@ -194,7 +194,10 @@ class Handlers:
                             skill_levels[skill] = i
                             break
                 except KeyError:
-                    skill_levels[skill] = hypixel_profile['achievements'][self.skills[skill]]
+                    try:
+                        skill_levels[skill] = hypixel_profile['achievements'][self.skills[skill]]
+                    except KeyError:
+                        skill_levels[skill] = 0
 
             skill_levels['average_skill_level'] = sum(skill_levels.values()) / 7
             return skill_levels

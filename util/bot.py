@@ -26,7 +26,7 @@ class FFF(commands.AutoShardedBot):
         # self.remove_command("help")
         await self.load_extensions()
         await self.update_activity()
-        print(f"Logged in as {self.user} ({self.user.id})")
+        print(f"Logged in as {self.user} ({self.user.id}).")
 
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
