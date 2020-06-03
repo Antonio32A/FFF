@@ -16,7 +16,7 @@
 [![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/check-it-out.svg)](https://forthebadge.com)
 
-A simple Discord bot written in discord.py for Discord guild of the Final Floor Frags guild on Hypixel.
+A simple Discord bot written in discord.py for a Discord guild of the Final Floor Frags guild on Hypixel.
 
 ### Features
 - `profile <username>` - Shows somebody's Hypixel SkyBlock profile information such as:
