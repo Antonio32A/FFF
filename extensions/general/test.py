@@ -10,7 +10,7 @@ class Test(commands.Cog, name="Test"):
     """
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config["key"])
+        self.skyblock = Handlers.SkyBlock(self.fff.config['key'])
         self.materials = [
             "LOG",
             "BROWN_MUSHROOM",
@@ -33,7 +33,7 @@ class Test(commands.Cog, name="Test"):
             if material == "LOG":
                 cost = cost / (4 / (3 / 4))
             mats[material] = cost
-            total += cost*amount
+            total += cost * amount
 
         embed = discord.Embed(title="Soups!", color=ctx.author.color)
         embed.description = f"Total amount of money needed to create **{amount}** soup(s) is ~**{round(total)}** coins!"
@@ -41,7 +41,7 @@ class Test(commands.Cog, name="Test"):
         for mat in mats:
             embed.add_field(
                 name=f"{amount}x **{mat.lower().replace('_', ' ')}**",
-                value=f"~**{round(mats[mat]*amount)}** coins (or ~**{round(mats[mat])}** coins each)",
+                value=f"~**{round(mats[mat] * amount)}** coins (or ~**{round(mats[mat])}** coins each)",
                 inline=False
             )
 

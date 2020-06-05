@@ -12,14 +12,14 @@ class Applications(commands.Cog, name="Applications"):
     """
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config["key"])
+        self.skyblock = Handlers.SkyBlock(self.fff.config['key'])
         self.mojang = Handlers.Mojang()
-        self.applicant_category = self.fff.config["applicant_category"]
-        self.apply_channel = self.fff.config["apply_channel"]
-        self.staff_role = self.fff.config["staff_role"]
-        self.min_total_slayer_xp = self.fff.config["min_total_slayer_xp"]
-        self.min_bank = self.fff.config["min_bank"]
-        self.min_average_skill_level = self.fff.config["min_average_skill_level"]
+        self.applicant_category = self.fff.config['applicant_category']
+        self.apply_channel = self.fff.config['apply_channel']
+        self.staff_role = self.fff.config['staff_role']
+        self.min_total_slayer_xp = self.fff.config['min_total_slayer_xp']
+        self.min_bank = self.fff.config['min_bank']
+        self.min_average_skill_level = self.fff.config['min_average_skill_level']
 
     @commands.command()
     async def apply(self, ctx, username: str = None):

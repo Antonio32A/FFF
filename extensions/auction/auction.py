@@ -18,10 +18,10 @@ class Auction(commands.Cog, name="Auction"):
     """
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config["key"])
+        self.skyblock = Handlers.SkyBlock(self.fff.config['key'])
         self.mojang = Handlers.Mojang()
 
-    @commands.command(hidden=True, aliases=["ah"])
+    @commands.command(hidden=True, aliases=['ah'])
     async def auction(self, ctx, username: str = None):
         """
         Display information about somebody's Hypixel SkyBlock unclaimed auctions.
@@ -55,17 +55,17 @@ class Auction(commands.Cog, name="Auction"):
         n = 0
         for auction in auctions:
             n += 1
-            auction_id = str(auction["uuid"])
+            auction_id = str(auction['uuid'])
             auction_id = insert(auction_id, "-", 8)
             auction_id = insert(auction_id, "-", 13)
             auction_id = insert(auction_id, "-", 18)
             auction_id = insert(auction_id, "-", 23)
 
             embed = discord.Embed(color=ctx.author.color, title=f"{auction['item_name']} (Page {str(n)})")
-            text = re.sub(r"§.", "", auction["item_lore"])
+            text = re.sub(r"§.", "", auction['item_lore'])
             embed.description = text
 
-            ending_at = datetime.fromtimestamp(auction["end"] / 1000)
+            ending_at = datetime.fromtimestamp(auction['end'] / 1000)
             ending_in = ending_at - datetime.now()
 
             if ending_in.total_seconds() < 0:

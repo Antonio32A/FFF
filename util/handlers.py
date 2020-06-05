@@ -1,6 +1,8 @@
 import json
-import aiohttp
 from datetime import datetime
+import aiohttp
+import gspread_asyncio
+from oauth2client.service_account import ServiceAccountCredentials
 
 
 class Handlers:
@@ -50,6 +52,89 @@ class Handlers:
                 data = await data.text()
             return json.loads(data)['id']
 
+        async def get_player_username(self, uuid: str):
+            """
+            Gets the Minecraft username of the player
+            :param (str) uuid: The player's Minecraft UUID
+            :returns (str) username: The player's username
+            """
+            async with self.session.get(f"{self.mojang_url}user/profiles/{uuid}/names") as data:
+                data = await data.text()
+            return json.loads(data)[-1]['name']
+
+    class Spreadsheet:
+        """
+        An API handler for Google Spreadsheets
+        """
+        def __init__(self, key):
+            self.key = key
+            self.client_manager = gspread_asyncio.AsyncioGspreadClientManager(self.get_credentials)
+            self.worksheet = None
+
+        @staticmethod
+        def get_credentials():
+            """
+            Gets the credentials because it is required for the AsyncioGspreadClientManager
+            :returns (ServiceAccountCredentials): The credentials
+            """
+            return ServiceAccountCredentials.from_json_keyfile_name(
+                "google_service_account_secret.json",
+                [
+                    "https://spreadsheets.google.com/feeds",
+                    "https://www.googleapis.com/auth/drive",
+                    "https://www.googleapis.com/auth/spreadsheets",
+                ],
+            )
+
+        async def auth(self):
+            """
+            Authenticates the AsyncioGspreadClientManager for Google Spreadsheets
+            """
+            agc = await self.client_manager.authorize()
+            spreadsheet = await agc.open_by_key(self.key)
+            self.worksheet = spreadsheet.sheet1
+
+        def get_all_users(self):
+            """
+            Gets all users in the Google Spreadsheets worksheet and gets their 'paid' and 'paid_to' data
+            :returns (dict) users: The dict with all the users and their 'paid' and 'paid_to' data
+            """
+            users = {}
+            records = self.worksheet.get_all_records()
+            for record in records:
+                paid = record['paid']
+                if paid == "TRUE":
+                    paid = True
+                else:
+                    paid = False
+
+                users[record['uuid']] = {
+                    "paid": paid,
+                    "paid_to": record['paid_to']
+                }
+            return users
+
+        def clear(self):
+            """
+            Clears the worksheet
+            """
+            self.worksheet.clear()
+
+        def append_row(self, row: list):
+            """
+            Appends a row to the worksheet
+            :param (list) row: The row to append
+            """
+            self.worksheet.append_row(row)
+
+        def insert_rows(self, rows: list, index: int = 1):
+            """
+            Inserts multiple rows in the worksheet
+            :param (list) rows: The rows to insert
+            :param (int) index: The index to insert the rows at
+            """
+            self.worksheet.insert_rows(rows, index)
+
     class SkyBlock:
         """
         An API handler for Hypixel's API
@@ -98,7 +183,7 @@ class Handlers:
             data = await self.api_request("player", {"key": self.key, "uuid": uuid})
             return data['player']
 
-        async def get_profiles(self, uuid):
+        async def get_profiles(self, uuid: str):
             """
             Gets all Hypixel SkyBlock profiles of a user
             :param (str) uuid: Player's UUID
@@ -149,7 +234,7 @@ class Handlers:
             return data['guild']
 
         @staticmethod
-        def calculate_latest_profile(profiles, uuid):
+        def calculate_latest_profile(profiles: list, uuid: str):
             """
             Calculates the latest Hypixel SkyBlock profile
             :param (list) profiles: A list of Hypixel SkyBlock profiles
@@ -160,17 +245,20 @@ class Handlers:
             profile_data = {}
 
             for profile in profiles:
-                last_save = profile['members'][uuid]['last_save']
-                last_save = datetime.fromtimestamp(last_save / 1000)
-                last_save_diff = (datetime.now() - last_save).total_seconds()
-                profile_id = profile['profile_id']
-                profile_timestamps[profile_id] = last_save_diff
-                profile_data[profile_id] = profile
+                try:
+                    last_save = profile['members'][uuid]['last_save']
+                    last_save = datetime.fromtimestamp(last_save / 1000)
+                    last_save_diff = (datetime.now() - last_save).total_seconds()
+                    profile_id = profile['profile_id']
+                    profile_timestamps[profile_id] = last_save_diff
+                    profile_data[profile_id] = profile
+                except KeyError:
+                    pass
             profile_id = min(profile_timestamps, key=profile_timestamps.get)
 
             return profile_data[profile_id]
 
-        def calculate_profile_skills(self, profile, hypixel_profile, uuid):
+        def calculate_profile_skills(self, profile: dict, hypixel_profile: dict, uuid: str):
             """
             Calculates Hypixel SkyBlock profile's skills
             :param (dict) profile: The profile which should be used to calculate Hypixel SkyBlock skills
@@ -203,7 +291,7 @@ class Handlers:
             return skill_levels
 
         @staticmethod
-        def calculate_profile_slayers(profile, uuid):
+        def calculate_profile_slayers(profile: dict, uuid: str):
             """
             Calculates Hypixel SkyBlock profile's slayers
             :param (dict) profile: The profile which should be used to calculate Hypixel SkyBlock slayers
@@ -234,7 +322,7 @@ class Handlers:
             slayer_bosses['total'] = total_slayer_xp
             return slayer_bosses
 
-        def calculate_profile_pets(self, profile, uuid):
+        def calculate_profile_pets(self, profile: dict, uuid: str):
             """
             Calculates Hypixel SkyBlock profile's pets
             :param (dict) profile: The profile which should be used to calculate Hypixel SkyBlock pets
