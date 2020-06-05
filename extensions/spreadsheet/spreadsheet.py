@@ -1,4 +1,5 @@
 import asyncio
+import json
 from datetime import datetime
 from discord.ext import commands, tasks
 from util import Handlers
@@ -29,9 +30,9 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
         self.skyblock = Handlers.SkyBlock(self.fff.config['key'])
         self.mojang = Handlers.Mojang()
         self.spreadsheet = Handlers.Spreadsheet(self.fff.config['spreadsheet_key'])
+        self.hypixel_guild_id = self.fff.config['hypixel_guild_id']
         self.min_total_slayer_xp = self.fff.config['min_total_slayer_xp']
         self.min_average_skill_level = self.fff.config['min_average_skill_level']
-        self.hypixel_guild_id = self.fff.config['hypixel_guild_id']
         self.spreadsheet_loop.start()
 
     def cog_unload(self):
@@ -66,7 +67,12 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
 
         for member in hypixel_guild['members']:
             uuid = member['uuid']
-            username = await self.mojang.get_player_username(uuid)
+            try:
+                username = await self.mojang.get_player_username(uuid)
+            except json.decoder.JSONDecodeError:
+                # I honestly have no idea why this even happens, but it might just be Mojang rateliminting us
+                username = "<UNKNOWN>"
+
             hypixel_profile = await self.skyblock.get_hypixel_profile(uuid)
             profiles = await self.skyblock.get_profiles(uuid)
 
@@ -101,7 +107,7 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
                 paid = False
                 paid_to = ""
 
-            await asyncio.sleep(2.1)  # Max 120 requests per minute, so we should less than 2 per second
+            await asyncio.sleep(2.5)  # Max 120 requests per minute, so we should send less than 2 per second
             rows.append([uuid, username, discord_connection, paid, paid_to, skill_average, slayer_xp, passes_reqs])
             # print(
             #     f"[{str(len(rows))}] {username} | {uuid} | {discord_connection} | {paid} | {paid_to} | "
