@@ -149,8 +149,8 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
                 now.strftime("%H"),
                 now.strftime("%M"),
                 now.strftime("%S"),
-                "cet",
-                "(utc + 2)"
+                "utc",
+                "(cet-2)"
             ]
         )
         print("Successfully updated the spreadsheet information.")
