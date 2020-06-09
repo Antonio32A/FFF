@@ -1,10 +1,10 @@
-import discord
-from discord.ext import commands
-from datetime import datetime
 import json
+from datetime import datetime
 
+from discord.ext import commands
 from disputils import BotEmbedPaginator
-from util import Handlers
+
+from util import Handlers, Embed
 
 
 def insert(source_str: str, insert_str: str, pos: int):
@@ -18,8 +18,8 @@ class Profile(commands.Cog, name="Profile"):
 
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config['key'])
-        self.mojang = Handlers.Mojang()
+        self.skyblock = Handlers.SkyBlock(self.fff.config['key'], self.fff.session)
+        self.mojang = Handlers.Mojang(self.fff.session)
         self.emojis = self.fff.config['emojis']
 
     @commands.command()
@@ -71,14 +71,14 @@ class Profile(commands.Cog, name="Profile"):
         last_logged_in_diff = datetime.now() - last_logged_in
         main_text += f":clock1: | Last logged in {round(last_logged_in_diff.total_seconds() / 3600, 1)} hours ago"
 
-        main = discord.Embed(
+        main = Embed(
             title=f"{self.emojis['profile']} {username}'s Skyblock Profile.",
             description=main_text,
             color=ctx.author.color
         )
         embeds.append(main)
 
-        skills_embed = discord.Embed(
+        skills_embed = Embed(
             title=f"{self.emojis['combat']} {username}'s Skyblock Skills.",
             color=ctx.author.color
         )
@@ -107,7 +107,7 @@ class Profile(commands.Cog, name="Profile"):
         )
         embeds.append(skills_embed)
 
-        slayers = discord.Embed(title=f"{self.emojis['slayer']} {username}'s Skyblock Slayers.", color=ctx.author.color)
+        slayers = Embed(title=f"{self.emojis['slayer']} {username}'s Skyblock Slayers.", color=ctx.author.color)
 
         def format_slayer_info(slayer_name: str):
             info = f"XP: {slayers_data[slayer_name]['xp']:,.0f}\n" \
@@ -140,7 +140,7 @@ class Profile(commands.Cog, name="Profile"):
                 text = "**" + text + "**"
             pet_text += text + "\n"
 
-        pet_embed = discord.Embed(title=f"{username}'s Pets", color=ctx.author.color)
+        pet_embed = Embed(title=f"{username}'s Pets", color=ctx.author.color)
         pet_embed.description = pet_text
         embeds.append(pet_embed)
 

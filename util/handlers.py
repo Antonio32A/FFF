@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-import aiohttp
+
 import gspread_asyncio
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -38,9 +38,9 @@ class Handlers:
         """
         An API handler for Mojang's API
         """
-        def __init__(self):
+        def __init__(self, session):
             self.mojang_url = "https://api.mojang.com/"
-            self.session = aiohttp.ClientSession()
+            self.session = session
 
         async def get_player_uuid(self, username: str):
             """
@@ -139,10 +139,10 @@ class Handlers:
         """
         An API handler for Hypixel's API
         """
-        def __init__(self, key):
+        def __init__(self, key, session):
             self.key = key
             self.hypixel_url = "https://api.hypixel.net/"
-            self.session = aiohttp.ClientSession()
+            self.session = session
 
             self.skill_xp = Handlers.JSON.read("skills")
             self.skills = {

@@ -1,6 +1,6 @@
-import discord
 from discord.ext import commands
-from util import Handlers
+
+from util import Handlers, Embed
 
 
 class Test(commands.Cog, name="Test"):
@@ -10,7 +10,7 @@ class Test(commands.Cog, name="Test"):
     """
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config['key'])
+        self.skyblock = Handlers.SkyBlock(self.fff.config['key'], self.fff.session)
         self.materials = [
             "LOG",
             "BROWN_MUSHROOM",
@@ -35,7 +35,7 @@ class Test(commands.Cog, name="Test"):
             mats[material] = cost
             total += cost * amount
 
-        embed = discord.Embed(title="Soups!", color=ctx.author.color)
+        embed = Embed(title="Soups!", color=ctx.author.color)
         embed.description = f"Total amount of money needed to create **{amount}** soup(s) is ~**{round(total)}** coins!"
 
         for mat in mats:

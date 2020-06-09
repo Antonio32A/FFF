@@ -1,9 +1,10 @@
-import discord
-from discord.ext import commands
 import json
 from datetime import datetime
 
-from util import Handlers
+import discord
+from discord.ext import commands
+
+from util import Handlers, Embed
 
 
 class Applications(commands.Cog, name="Applications"):
@@ -12,8 +13,8 @@ class Applications(commands.Cog, name="Applications"):
     """
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config['key'])
-        self.mojang = Handlers.Mojang()
+        self.skyblock = Handlers.SkyBlock(self.fff.config['key'], self.fff.session)
+        self.mojang = Handlers.Mojang(self.fff.session)
         self.applicant_category = self.fff.config['applicant_category']
         self.apply_channel = self.fff.config['apply_channel']
         self.staff_role = self.fff.config['staff_role']
@@ -58,7 +59,7 @@ class Applications(commands.Cog, name="Applications"):
         try:
             bank = round(float(profile['banking']['balance']), 1)
         except KeyError:
-            embed = discord.Embed(
+            embed = Embed(
                 title=":no_entry_sign: Bank API turned OFF.",
                 description="Please turn your Bank API **ON** and retry...",
                 color=ctx.author.color
@@ -68,7 +69,7 @@ class Applications(commands.Cog, name="Applications"):
 
         last_logged_in = datetime.fromtimestamp(profile['members'][uuid]['last_save'] / 1000)
         last_logged_in_diff = datetime.now() - last_logged_in
-        embed = discord.Embed(color=ctx.author.color)
+        embed = Embed(color=ctx.author.color)
 
         embed.add_field(name=":knife: | Total Slayer XP", value=f"{total_slayer_xp:,}", inline=False)
         embed.add_field(name=":moneybag: | Bank", value=f"{bank:,}", inline=False)
@@ -85,7 +86,7 @@ class Applications(commands.Cog, name="Applications"):
         if (total_slayer_xp >= self.min_total_slayer_xp
                 and bank >= self.min_bank
                 and average_skill_level >= self.min_average_skill_level):
-            embed = discord.Embed(
+            embed = Embed(
                 title=":white_check_mark: Requirement Check **PASSED**!",
                 description="You're eligible to join FinalFloorFrags!\n"
                             "You've been added to a wait list queue and will be notified when there is a space.\n\n"
@@ -111,7 +112,7 @@ class Applications(commands.Cog, name="Applications"):
                 overwrites=overwrites
             )
 
-            send_applicant = discord.Embed(title=f"FinalFloorFrags Applicant -> {username} {profile['cute_name']}")
+            send_applicant = Embed(title=f"FinalFloorFrags Applicant -> {username} {profile['cute_name']}")
             send_applicant.add_field(name=":knife: | Total Slayer XP", value=f"{total_slayer_xp:,}", inline=False)
             send_applicant.add_field(name=":moneybag: | Bank", value=f"{bank:,}", inline=False)
             send_applicant.add_field(
@@ -135,7 +136,7 @@ class Applications(commands.Cog, name="Applications"):
             )
 
         else:
-            embed = discord.Embed(
+            embed = Embed(
                 title=":x: Requirement Check FAILED!",
                 description="Unfortunately at this current moment you don't meet the requirements to join"
                             " the wait list for FinalFloorFrags, please try again in the future!\n"

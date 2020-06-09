@@ -3,3 +3,4 @@ google_service_account_secret.json
 
 __pycache__
 venv
+bot.log

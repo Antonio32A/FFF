@@ -1,7 +1,9 @@
 import asyncio
 import json
 from datetime import datetime
+
 from discord.ext import commands, tasks
+
 from util import Handlers
 
 
@@ -27,9 +29,10 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
     """
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config['key'])
-        self.mojang = Handlers.Mojang()
+        self.skyblock = Handlers.SkyBlock(self.fff.config['key'], self.fff.session)
+        self.mojang = Handlers.Mojang(self.fff.session)
         self.spreadsheet = Handlers.Spreadsheet(self.fff.config['spreadsheet_key'])
+
         self.hypixel_guild_id = self.fff.config['hypixel_guild_id']
         self.min_total_slayer_xp = self.fff.config['min_total_slayer_xp']
         self.min_average_skill_level = self.fff.config['min_average_skill_level']
@@ -37,7 +40,7 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
 
     def cog_unload(self):
         """
-        In case the cog unloads, stop the loop
+        Cancel the loop when the cog unloads
         """
         self.spreadsheet_loop.cancel()
 
@@ -46,7 +49,7 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
         """
         Automatically gets the guild and player stats and updates them on the spreadsheet
         """
-        print("Updating spreadsheet information...")
+        self.fff.logger.info("Updating spreadsheet information...")
         await self.spreadsheet.auth()
         users = self.spreadsheet.get_all_users()
         self.spreadsheet.append_row(
@@ -74,7 +77,11 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
                 username = "<UNKNOWN>"
 
             hypixel_profile = await self.skyblock.get_hypixel_profile(uuid)
-            profiles = await self.skyblock.get_profiles(uuid)
+            try:
+                profiles = await self.skyblock.get_profiles(uuid)
+            except Exception as error:
+                self.fff.logger.error(error)
+                profiles = await self.skyblock.get_profiles("fb768d64953945d495f32691adbb27c5")  # Jayevarmen
 
             try:
                 profile = self.skyblock.calculate_latest_profile(profiles, uuid)
@@ -90,7 +97,7 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
                     passes_reqs = True
                 else:
                     passes_reqs = False
-            except (KeyError, TypeError):
+            except (KeyError, TypeError, ValueError):
                 skill_average = "something"
                 slayer_xp = "went"
                 passes_reqs = "wrong"
@@ -109,10 +116,10 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
 
             await asyncio.sleep(2.5)  # Max 120 requests per minute, so we should send less than 2 per second
             rows.append([uuid, username, discord_connection, paid, paid_to, skill_average, slayer_xp, passes_reqs])
-            # print(
-            #     f"[{str(len(rows))}] {username} | {uuid} | {discord_connection} | {paid} | {paid_to} | "
-            #     f"{skill_average} | {slayer_xp} | {passes_reqs}"
-            # )
+            self.fff.logger.debug(
+                f"[{str(len(rows))}] {username} | {uuid} | {discord_connection} | {paid} | {paid_to} | "
+                f"{skill_average} | {slayer_xp} | {passes_reqs}"
+            )
 
         self.spreadsheet.clear()
         self.spreadsheet.append_row(
@@ -153,7 +160,7 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
                 "(cet-2)"
             ]
         )
-        print("Successfully updated the spreadsheet information.")
+        self.fff.logger.info("Successfully updated the spreadsheet information.")
 
     @spreadsheet_loop.before_loop
     async def before_tasks(self):

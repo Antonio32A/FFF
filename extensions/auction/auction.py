@@ -1,11 +1,11 @@
-import discord
-from discord.ext import commands
-from datetime import datetime
-import re
 import json
+import re
+from datetime import datetime
 
+from discord.ext import commands
 from disputils import BotEmbedPaginator
-from util import Handlers
+
+from util import Handlers, Embed
 
 
 def insert(source_str: str, insert_str: str, pos: int):
@@ -18,8 +18,8 @@ class Auction(commands.Cog, name="Auction"):
     """
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config['key'])
-        self.mojang = Handlers.Mojang()
+        self.skyblock = Handlers.SkyBlock(self.fff.config['key'], self.fff.session)
+        self.mojang = Handlers.Mojang(self.fff.session)
 
     @commands.command(hidden=True, aliases=['ah'])
     async def auction(self, ctx, username: str = None):
@@ -61,7 +61,7 @@ class Auction(commands.Cog, name="Auction"):
             auction_id = insert(auction_id, "-", 18)
             auction_id = insert(auction_id, "-", 23)
 
-            embed = discord.Embed(color=ctx.author.color, title=f"{auction['item_name']} (Page {str(n)})")
+            embed = Embed(color=ctx.author.color, title=f"{auction['item_name']} (Page {str(n)})")
             text = re.sub(r"§.", "", auction['item_lore'])
             embed.description = text
 

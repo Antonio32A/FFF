@@ -31,5 +31,14 @@
         "wolf": "<:sven:>"
     },
     "spreadsheet_key": "k3y",
-    "hypixel_guild_id": "hyp1x3l_gu1ld_1d"
+    "hypixel_guild_id": "hyp1x3l_gu1ld_1d",
+    "roles": {
+        "this (lowest priority)": 0,
+        "order": 0,
+        "is": 0,
+        "very": 0,
+        "important (highest priority)": 0
+    },
+    "logging_level": "INFO",
+    "debug": false
 }
