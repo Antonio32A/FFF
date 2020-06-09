@@ -13,14 +13,14 @@ class Applications(commands.Cog, name="Applications"):
     """
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config['key'], self.fff.session)
+        self.skyblock = Handlers.SkyBlock(self.fff.config['hypixel']['key'], self.fff.session)
         self.mojang = Handlers.Mojang(self.fff.session)
-        self.applicant_category = self.fff.config['applicant_category']
-        self.apply_channel = self.fff.config['apply_channel']
-        self.staff_role = self.fff.config['staff_role']
-        self.min_total_slayer_xp = self.fff.config['min_total_slayer_xp']
-        self.min_bank = self.fff.config['min_bank']
-        self.min_average_skill_level = self.fff.config['min_average_skill_level']
+        self.applicant_category = self.fff.config['discord_guild']['applicant_category']
+        self.apply_channel = self.fff.config['discord_guild']['apply_channel']
+        self.staff_role = self.fff.config['discord_guild']['staff_role']
+        self.min_total_slayer_xp = self.fff.config['requirements']['min_total_slayer_xp']
+        self.min_bank = self.fff.config['requirements']['min_bank']
+        self.min_average_skill_level = self.fff.config['requirements']['min_average_skill_level']
 
     @commands.command()
     async def apply(self, ctx, username: str = None):

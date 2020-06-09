@@ -9,11 +9,11 @@ from util import Handlers
 class DiscordSync(commands.Cog, name="DiscordSync"):
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config['key'], self.fff.session)
+        self.skyblock = Handlers.SkyBlock(self.fff.config['hypixel']['key'], self.fff.session)
         self.mojang = Handlers.Mojang(self.fff.session)
 
-        self.hypixel_guild_id = self.fff.config['hypixel_guild_id']
-        self.guild = self.fff.get_guild(self.fff.config['guild'])
+        self.hypixel_guild_id = self.fff.config['hypixel']['guild_id']
+        self.guild = self.fff.get_guild(self.fff.config['discord_guild']['id'])
         self.roles = self.fff.config['roles']
         self.discord_sync_loop.start()
 

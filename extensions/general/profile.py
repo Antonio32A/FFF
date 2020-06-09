@@ -18,9 +18,9 @@ class Profile(commands.Cog, name="Profile"):
 
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config['key'], self.fff.session)
+        self.skyblock = Handlers.SkyBlock(self.fff.config['hypixel']['key'], self.fff.session)
         self.mojang = Handlers.Mojang(self.fff.session)
-        self.emojis = self.fff.config['emojis']
+        self.emojis = self.fff.config['discord_guild']['emojis']
 
     @commands.command()
     async def profile(self, ctx, username: str = None):

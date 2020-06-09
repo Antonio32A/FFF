@@ -29,13 +29,13 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
     """
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config['key'], self.fff.session)
+        self.skyblock = Handlers.SkyBlock(self.fff.config['hypixel']['key'], self.fff.session)
         self.mojang = Handlers.Mojang(self.fff.session)
-        self.spreadsheet = Handlers.Spreadsheet(self.fff.config['spreadsheet_key'])
+        self.spreadsheet = Handlers.Spreadsheet(self.fff.config['bot']['spreadsheet_key'])
 
-        self.hypixel_guild_id = self.fff.config['hypixel_guild_id']
-        self.min_total_slayer_xp = self.fff.config['min_total_slayer_xp']
-        self.min_average_skill_level = self.fff.config['min_average_skill_level']
+        self.hypixel_guild_id = self.fff.config['hypixel']['guild_id']
+        self.min_total_slayer_xp = self.fff.config['requirements']['min_total_slayer_xp']
+        self.min_average_skill_level = self.fff.config['requirements']['min_average_skill_level']
         self.spreadsheet_loop.start()
 
     def cog_unload(self):

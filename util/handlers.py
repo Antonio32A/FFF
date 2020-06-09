@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+import asyncio
 import gspread_asyncio
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -172,7 +173,11 @@ class Handlers:
             if data['success']:
                 return data
             else:
-                raise Exception(data['cause'])
+                if data['cause'] == "Key throttle":
+                    await asyncio.sleep(10)
+                    await self.api_request(endpoint, params)
+                else:
+                    raise Exception(data['cause'])
 
         async def get_hypixel_profile(self, uuid):
             """

@@ -10,7 +10,7 @@ class Test(commands.Cog, name="Test"):
     """
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config['key'], self.fff.session)
+        self.skyblock = Handlers.SkyBlock(self.fff.config['hypixel']['key'], self.fff.session)
         self.materials = [
             "LOG",
             "BROWN_MUSHROOM",

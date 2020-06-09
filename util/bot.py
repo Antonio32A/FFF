@@ -9,7 +9,7 @@ from util.handlers import Handlers
 from util.logging import Logger
 
 config = Handlers.JSON.read("config")
-logger = Logger(config['logging_level']).logger
+logger = Logger(config['bot']['logging_level']).logger
 
 
 class FFF(commands.AutoShardedBot):
@@ -19,16 +19,8 @@ class FFF(commands.AutoShardedBot):
         self.logger = logger
         self.session = aiohttp.ClientSession()
 
-        self.base_extensions = [
-            "general",
-            "auction",
-            "applications",
-            "spreadsheet",
-            "discord_sync"
-        ]
-        self.debug_extensions = [
-            "owner"
-        ]
+        self.base_extensions = self.config['bot']['extensions']['base']
+        self.debug_extensions = self.config['bot']['extensions']['debug']
 
     async def on_ready(self):
         # self.remove_command("help")
@@ -81,7 +73,7 @@ class FFF(commands.AutoShardedBot):
                 self.logger.error(traceback.format_exc())
 
     async def load_extensions(self):
-        if self.config['debug']:
+        if self.config['bot']['debug']:
             extensions = self.base_extensions + self.debug_extensions
         else:
             extensions = self.base_extensions
@@ -93,8 +85,8 @@ class FFF(commands.AutoShardedBot):
 
     async def update_activity(self):
         activity = discord.Activity(
-            name=self.config['activity']['name'],
-            type=getattr(discord.ActivityType, self.config['activity']['type'])
+            name=self.config['bot']['activity']['name'],
+            type=getattr(discord.ActivityType, self.config['bot']['activity']['type'])
         )
         await self.change_presence(activity=activity)
 
@@ -102,7 +94,7 @@ class FFF(commands.AutoShardedBot):
 def get_pre(bot, message):
     # message is required for the get_pre to work properly
     bot_id = bot.user.id
-    prefixes = [f"<@{bot_id}> ", f"<@!{bot_id}> ", bot.config['prefix']]
+    prefixes = [f"<@{bot_id}> ", f"<@!{bot_id}> ", bot.config['bot']['prefix']]
     return prefixes
 
 

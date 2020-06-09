@@ -1,37 +1,36 @@
 {
-    "token": "coffee",
-    "prefix": "!",
-    "activity": {
-        "name": "cool stuff",
-        "type": "listening"
+    "bot": {
+        "token": "coffee",
+        "prefix": "!",
+        "activity": {
+            "name": "cool stuff",
+            "type": "listening"
+        },
+        "spreadsheet_key": "k3y",
+        "logging_level": "INFO",
+        "debug": false,
+        "extensions": {
+            "base": [
+                "general",
+                "auction",
+                "applications",
+                "spreadsheet",
+                "discord_sync"
+            ],
+            "debug": [
+                "owner"
+            ]
+        }
     },
-    "key": "/api new",
-    "guild": 0,
-    "apply_channel": 0,
-    "applicant_category": 0,
-    "staff_role": 0,
-    "min_total_slayer_xp": 1337,
-    "min_bank": 69420,
-    "min_average_skill_level": 32,
-    "emojis": {
-        "farming": "<:farming:0>",
-        "mining": "<:mining:0>",
-        "combat": "<:combat:0>",
-        "foraging": "<:foraging:0>",
-        "fishing": "<:fishing:0>",
-        "enchanting": "<:enchanting:0>",
-        "alchemy": "<:alchemy:0>",
-        "profile": "<:profile:0>",
-        "fairysouls": "<:fairysouls:0>",
-        "bank": "<:bank:0>",
-        "purse": "<:purse~1:>",
-        "slayer": "<:slayer:>",
-        "zombie": "<:revenant:>",
-        "spider": "<:tarantula:>",
-        "wolf": "<:sven:>"
+    "hypixel": {
+        "key": "",
+        "guild_id": "hyp1x3l_gu1ld_1d"
     },
-    "spreadsheet_key": "k3y",
-    "hypixel_guild_id": "hyp1x3l_gu1ld_1d",
+    "requirements": {
+        "min_total_slayer_xp": 1337,
+        "min_bank": 69420,
+        "min_average_skill_level": 32
+    },
     "roles": {
         "this (lowest priority)": 0,
         "order": 0,
@@ -39,6 +38,27 @@
         "very": 0,
         "important (highest priority)": 0
     },
-    "logging_level": "INFO",
-    "debug": false
+    "discord_guild": {
+        "id": 0,
+        "apply_channel": 0,
+        "applicant_category": 0,
+        "staff_role": 0,
+        "emojis": {
+            "farming": "<:farming:0>",
+            "mining": "<:mining:0>",
+            "combat": "<:combat:0>",
+            "foraging": "<:foraging:0>",
+            "fishing": "<:fishing:0>",
+            "enchanting": "<:enchanting:0>",
+            "alchemy": "<:alchemy:0>",
+            "profile": "<:profile:0>",
+            "fairysouls": "<:fairysouls:0>",
+            "bank": "<:bank:0>",
+            "purse": "<:purse~1:>",
+            "slayer": "<:slayer:>",
+            "zombie": "<:revenant:>",
+            "spider": "<:tarantula:>",
+            "wolf": "<:sven:>"
+        }
+    }
 }
