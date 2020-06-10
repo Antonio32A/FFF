@@ -30,7 +30,7 @@ class FFF(commands.AutoShardedBot):
         self.session = aiohttp.ClientSession()
         self.logger = logger
         self.debug = debug
-        self.guild_name = self.bot_config['name']
+        self.guild_name = self.bot_config['title']
 
         self.base_extensions = self.bot_config['extensions']['base']
         self.debug_extensions = self.bot_config['extensions']['debug']
