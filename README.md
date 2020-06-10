@@ -27,7 +27,6 @@ A simple Discord bot written in discord.py for a Discord guild of the Final Floo
 - `soups [amount=1]` - Calculates the average prices of Magical Soups. Defaults to 1 soup.
 - automatic Discord sync based on Hypixel guild ranks
 - a spreadsheet which is frequently updated and displays Hypixel guild members' SkyBlock profile information
-- contest commands soon™
 
 
 ### Running
