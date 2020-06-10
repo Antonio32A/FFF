@@ -25,7 +25,7 @@ class Applications(commands.Cog, name="Applications"):
     @commands.command()
     async def apply(self, ctx, username: str = None):
         """
-        Apply to the FinalFloorFrags guild
+        Apply for the Hypixel guild
         """
         if not ctx.channel.id == self.apply_channel:
             return
@@ -88,7 +88,7 @@ class Applications(commands.Cog, name="Applications"):
                 and average_skill_level >= self.min_average_skill_level):
             embed = Embed(
                 title=":white_check_mark: Requirement Check **PASSED**!",
-                description="You're eligible to join FinalFloorFrags!\n"
+                description=f"You're eligible to join {self.fff.title}\n"
                             "You've been added to a wait list queue and will be notified when there is a space.\n\n"
                             "Thanks for applying and have a great day! :heart:",
                 color=ctx.author.color
@@ -112,7 +112,7 @@ class Applications(commands.Cog, name="Applications"):
                 overwrites=overwrites
             )
 
-            send_applicant = Embed(title=f"FinalFloorFrags Applicant -> {username} {profile['cute_name']}")
+            send_applicant = Embed(title=f"{self.fff.title} Applicant -> {username} {profile['cute_name']}")
             send_applicant.add_field(name=":knife: | Total Slayer XP", value=f"{total_slayer_xp:,}", inline=False)
             send_applicant.add_field(name=":moneybag: | Bank", value=f"{bank:,}", inline=False)
             send_applicant.add_field(
@@ -138,9 +138,8 @@ class Applications(commands.Cog, name="Applications"):
         else:
             embed = Embed(
                 title=":x: Requirement Check FAILED!",
-                description="Unfortunately at this current moment you don't meet the requirements to join"
-                            " the wait list for FinalFloorFrags, please try again in the future!\n"
-                            "Check the #next-purge channel for the requirements!",
+                description="Unfortunately at this current moment you don't meet the requirements to join "
+                            f"the wait list for {self.fff.title}, please try again in the future!\n",
                 color=ctx.author.color
             )
 

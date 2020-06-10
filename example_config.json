@@ -1,14 +1,14 @@
 {
     "bot": {
-        "token": "coffee",
-        "prefix": "!",
+        "production_token": "coffee",
+        "debug_token": "tea",
+        "production_prefix": "f!",
+        "debug_prefix": "f.",
         "activity": {
             "name": "cool stuff",
             "type": "listening"
         },
         "spreadsheet_key": "k3y",
-        "logging_level": "INFO",
-        "debug": false,
         "extensions": {
             "base": [
                 "general",
@@ -20,7 +20,8 @@
             "debug": [
                 "owner"
             ]
-        }
+        },
+        "title": "Final Floor Frags"
     },
     "hypixel": {
         "key": "",

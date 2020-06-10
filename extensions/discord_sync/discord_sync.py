@@ -44,7 +44,8 @@ class DiscordSync(commands.Cog, name="DiscordSync"):
                 discord_connection = hypixel_profile['socialMedia']['links']['DISCORD']
             except KeyError:
                 username = await self.mojang.get_player_username(uuid)
-                self.fff.logger.warning(f"{username} ({uuid}) with the rank {rank} does not have their Discord connected!")
+                self.fff.logger.warning(f"{username} ({uuid}) with the rank {rank} does not have their Discord "
+                                        f"connected!")
                 continue
 
             discord_member = self.guild.get_member_named(discord_connection)

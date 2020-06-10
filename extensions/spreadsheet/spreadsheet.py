@@ -31,7 +31,7 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
         self.fff = fff
         self.skyblock = Handlers.SkyBlock(self.fff.config['hypixel']['key'], self.fff.session)
         self.mojang = Handlers.Mojang(self.fff.session)
-        self.spreadsheet = Handlers.Spreadsheet(self.fff.config['bot']['spreadsheet_key'])
+        self.spreadsheet = Handlers.Spreadsheet(self.fff.bot_config['spreadsheet_key'])
 
         self.hypixel_guild_id = self.fff.config['hypixel']['guild_id']
         self.min_total_slayer_xp = self.fff.config['requirements']['min_total_slayer_xp']
@@ -76,7 +76,12 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
                 # I honestly have no idea why this even happens, but it might just be Mojang rateliminting us
                 username = "<UNKNOWN>"
 
-            hypixel_profile = await self.skyblock.get_hypixel_profile(uuid)
+            try:
+                hypixel_profile = await self.skyblock.get_hypixel_profile(uuid)
+            except TypeError:
+                # I have no idea why this error happens, but if it does I'll just give it the Jayevarmen stats
+                hypixel_profile = await self.skyblock.get_hypixel_profile("fb768d64953945d495f32691adbb27c5")
+
             try:
                 profiles = await self.skyblock.get_profiles(uuid)
             except Exception as error:

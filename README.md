@@ -29,10 +29,12 @@ A simple Discord bot written in discord.py for a Discord guild of the Final Floo
 - `apply <username>` - Applies for the FFF Hypixel guild.
 - `auction <username>` - Shows somebody's Hypixel SkyBlock auctions.
 - `soups [amount=1]` - Calculates the average prices of Magical Soups. Defaults to 1 soup.
+- automatic Discord sync based on Hypixel guild ranks
+- a spreadsheet which is frequently updated and displays Hypixel guild members' SkyBlock profile information
 - contest commands soon™
 
 ### Credits
-- [Marti157](https://github.com/marti157) for help with the code and for the contest code.
+- [Marti157](https://github.com/marti157) for the help with the code and for the contest code.
 - [Ben/correct](https://github.com/Drug) for the original bot concept and for the original application system.
 - ComplexOrigin for the nice pet level calculation method and more.
 

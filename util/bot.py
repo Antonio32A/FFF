@@ -1,3 +1,4 @@
+import argparse
 import traceback
 
 import aiohttp
@@ -8,25 +9,48 @@ from util.embed import Embed
 from util.handlers import Handlers
 from util.logging import Logger
 
-config = Handlers.JSON.read("config")
-logger = Logger(config['bot']['logging_level']).logger
+parser = argparse.ArgumentParser(description="Runs the FFF bot")
+parser.add_argument(
+    "--debug",
+    help="Add this argument if you wish to run the bot in debug mode which changes the token, prefix and loads some "
+         "debug modules.",
+    action="store_true"
+)
+
+debug = parser.parse_args().debug
+logging_level = "DEBUG" if debug else "INFO"
+logger = Logger(level=logging_level).logger
 
 
 class FFF(commands.AutoShardedBot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.config = config
-        self.logger = logger
+        self.config = Handlers.JSON.read("config")
+        self.bot_config = self.config['bot']
         self.session = aiohttp.ClientSession()
+        self.logger = logger
+        self.debug = debug
+        self.guild_name = self.bot_config['name']
 
-        self.base_extensions = self.config['bot']['extensions']['base']
-        self.debug_extensions = self.config['bot']['extensions']['debug']
+        self.base_extensions = self.bot_config['extensions']['base']
+        self.debug_extensions = self.bot_config['extensions']['debug']
+
+        if self.debug:
+            self.bot_extensions = self.base_extensions + self.debug_extensions
+            self.token = self.bot_config['debug_token']
+            self.prefix = self.bot_config['debug_prefix']
+        else:
+            self.bot_extensions = self.base_extensions
+            self.token = self.bot_config['production_token']
+            self.prefix = self.bot_config['production_prefix']
 
     async def on_ready(self):
         # self.remove_command("help")
         await self.load_extensions()
         await self.update_activity()
         print(f"Logged in as {self.user} ({self.user.id}).")
+        if self.debug:
+            self.logger.critical("Starting in debug mode, do not use this in production!")
 
     async def close(self):
         print("\nShutting down!")
@@ -73,12 +97,7 @@ class FFF(commands.AutoShardedBot):
                 self.logger.error(traceback.format_exc())
 
     async def load_extensions(self):
-        if self.config['bot']['debug']:
-            extensions = self.base_extensions + self.debug_extensions
-        else:
-            extensions = self.base_extensions
-
-        for extension in extensions:
+        for extension in self.bot_extensions:
             self.load_extension(f"extensions.{extension}")
             print(f"Loaded {extension}.")
         print("Starting...")
@@ -92,9 +111,8 @@ class FFF(commands.AutoShardedBot):
 
 
 def get_pre(bot, message):
-    # message is required for the get_pre to work properly
     bot_id = bot.user.id
-    prefixes = [f"<@{bot_id}> ", f"<@!{bot_id}> ", bot.config['bot']['prefix']]
+    prefixes = [f"<@{bot_id}> ", f"<@!{bot_id}> ", bot.prefix]
     return prefixes
 
 
