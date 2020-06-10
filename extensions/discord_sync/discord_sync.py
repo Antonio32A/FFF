@@ -38,7 +38,11 @@ class DiscordSync(commands.Cog, name="DiscordSync"):
             uuid = member['uuid']
             rank = member['rank'].lower()
 
-            hypixel_profile = await self.skyblock.get_hypixel_profile(uuid)
+            try:
+                hypixel_profile = await self.skyblock.get_hypixel_profile(uuid)
+            except TypeError:
+                # Somehow broken Hypixel profiles exist?
+                continue
             try:
                 role = self.roles[rank]
                 discord_connection = hypixel_profile['socialMedia']['links']['DISCORD']
