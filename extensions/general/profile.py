@@ -7,10 +7,6 @@ from disputils import BotEmbedPaginator
 from util import Handlers, Embed
 
 
-def insert(source_str: str, insert_str: str, pos: int):
-    return source_str[:pos] + insert_str + source_str[pos:]
-
-
 class Profile(commands.Cog, name="Profile"):
     """
     This cog adds a profile command which shows your SkyBlock stats
@@ -90,7 +86,8 @@ class Profile(commands.Cog, name="Profile"):
             "experience_skill_farming": f"{self.emojis['farming']} | Farming",
             "experience_skill_enchanting": f"{self.emojis['enchanting']} | Enchanting",
             "experience_skill_fishing": f"{self.emojis['fishing']} | Fishing",
-            "experience_skill_foraging": f"{self.emojis['foraging']} | Foraging"
+            "experience_skill_foraging": f"{self.emojis['foraging']} | Foraging",
+            "experience_skill_taming": f"{self.emojis['taming']} | Taming"
         }
 
         for skill in skills_data.keys():

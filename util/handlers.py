@@ -153,7 +153,8 @@ class Handlers:
                 "experience_skill_farming": "skyblock_harvester",
                 "experience_skill_enchanting": "skyblock_augmentation",
                 "experience_skill_fishing": "skyblock_angler",
-                "experience_skill_foraging": "skyblock_gatherer"
+                "experience_skill_foraging": "skyblock_gatherer",
+                "experience_skill_taming": "skyblock_domesticator"
             }
 
             self.pet_levels = Handlers.JSON.read("pet_rarity")
@@ -292,7 +293,7 @@ class Handlers:
                     except KeyError:
                         skill_levels[skill] = 0
 
-            skill_levels['average_skill_level'] = sum(skill_levels.values()) / 7
+            skill_levels['average_skill_level'] = sum(skill_levels.values()) / 8
             return skill_levels
 
         @staticmethod
