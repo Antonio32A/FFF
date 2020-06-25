@@ -2,6 +2,9 @@ import discord
 
 
 class Embed(discord.Embed):
+    """
+    Custom Embed handler which adds Made by github.com/Antonio32A to embed footers
+    """
     def __init__(self, **kwargs):
         super(Embed, self).__init__(**kwargs)
         self.set_footer(

@@ -3,16 +3,11 @@ import asyncio
 import discord
 from discord.ext import commands, tasks
 
-from util import Handlers
-
 
 class DiscordSync(commands.Cog, name="DiscordSync"):
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config['hypixel']['key'], self.fff.session)
-        self.mojang = Handlers.Mojang(self.fff.session)
 
-        self.hypixel_guild_id = self.fff.config['hypixel']['guild_id']
         self.guild = self.fff.get_guild(self.fff.config['discord_guild']['id'])
         self.roles = self.fff.config['roles']
         self.discord_sync_loop.start()
@@ -23,34 +18,39 @@ class DiscordSync(commands.Cog, name="DiscordSync"):
         """
         self.discord_sync_loop.cancel()
 
-    @tasks.loop(minutes=10.0)
+    @tasks.loop(minutes=15.0)
     async def discord_sync_loop(self):
         """
         Automatically gets all the guild members and assigns them the roles in Discord
         """
+        try:
+            guild_data = self.fff.cache.get()['guild_data']
+        except KeyError:
+            return  # This only happens when the bot starts since the data isn't cached yet
+
         self.fff.logger.info("Syncing Discord roles and Hypixel guild ranks...")
-        hypixel_guild = await self.skyblock.get_guild(self.hypixel_guild_id)
         all_roles = {}
         for role in self.roles.values():
             all_roles[role] = []
 
-        for member in hypixel_guild['members']:
-            uuid = member['uuid']
-            rank = member['rank'].lower()
+        for member in guild_data.keys():
+            uuid = member
+            member = guild_data[uuid]
+            username = member['username']
+            discord_connection = member['discord_connection']
+            rank = member['rank']
+
+            if discord_connection is None:
+                self.fff.logger.warning(
+                    f"{username} ({uuid}) with the rank {rank} does not have their Discord "
+                    f"connected!"
+                )
+                continue
 
             try:
-                hypixel_profile = await self.skyblock.get_hypixel_profile(uuid)
-            except TypeError:
-                # Somehow broken Hypixel profiles exist?
-                continue
-            try:
                 role = self.roles[rank]
-                discord_connection = hypixel_profile['socialMedia']['links']['DISCORD']
             except KeyError:
-                username = await self.mojang.get_player_username(uuid)
-                self.fff.logger.warning(f"{username} ({uuid}) with the rank {rank} does not have their Discord "
-                                        f"connected!")
-                continue
+                continue  # role doesn't exist
 
             discord_member = self.guild.get_member_named(discord_connection)
             if discord_member is not None:
@@ -58,8 +58,6 @@ class DiscordSync(commands.Cog, name="DiscordSync"):
                 for i in range(list(self.roles.values()).index(role) + 1):
                     role = list(self.roles.values())[i]
                     all_roles[role].append(discord_member.id)
-
-            await asyncio.sleep(1)  # To prevent ratelimiting
 
         for role in all_roles.keys():
             discord_role = self.guild.get_role(int(role))

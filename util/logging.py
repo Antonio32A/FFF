@@ -3,6 +3,9 @@ import coloredlogs
 
 
 class Logger:
+    """
+    Custom logging class
+    """
     def __init__(self, level):
         self.logger = logging.getLogger(__name__)
         self.logging_format = "[%(asctime)s] [%(levelname)s]: %(message)s"
@@ -28,7 +31,8 @@ class Logger:
             "google.auth.transport.requests",
             "urllib3.connectionpool",
             "urllib3.util.retry",
-            "asyncio"
+            "asyncio",
+            "matplotlib.font_manager"
         ]
         for disabled_logger in self.disabled_loggers:
             disabled_logger = logging.getLogger(disabled_logger)

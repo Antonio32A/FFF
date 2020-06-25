@@ -1,5 +1,6 @@
 {
     "bot": {
+        "owners": [],
         "production_token": "coffee",
         "debug_token": "tea",
         "production_prefix": "f!",
@@ -15,7 +16,9 @@
                 "auction",
                 "applications",
                 "spreadsheet",
-                "discord_sync"
+                "discord_sync",
+                "tasks",
+                "contest"
             ],
             "debug": [
                 "owner"
@@ -26,6 +29,12 @@
     "hypixel": {
         "key": "",
         "guild_id": "hyp1x3l_gu1ld_1d"
+    },
+    "database": {
+        "user": "user",
+        "password": "password",
+        "host": "127.0.0.1",
+        "database": "fff"
     },
     "requirements": {
         "min_total_slayer_xp": 1337,
@@ -62,5 +71,18 @@
             "spider": "<:tarantula:>",
             "wolf": "<:sven:>"
         }
+    },
+    "contest": {
+        "enabled_skills": [
+            "experience_skill_combat",
+            "experience_skill_mining",
+            "experience_skill_alchemy",
+            "experience_skill_farming",
+            "experience_skill_enchanting",
+            "experience_skill_fishing",
+            "experience_skill_foraging",
+            "experience_skill_taming"
+        ],
+        "slayer_enabled": true
     }
 }

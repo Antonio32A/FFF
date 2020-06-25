@@ -8,6 +8,8 @@ from discord.ext import commands
 from util.embed import Embed
 from util.handlers import Handlers
 from util.logging import Logger
+from util.cache import Cache
+from util.database import Database
 
 parser = argparse.ArgumentParser(description="Runs the FFF bot")
 parser.add_argument(
@@ -21,14 +23,19 @@ debug = parser.parse_args().debug
 logging_level = "DEBUG" if debug else "INFO"
 logger = Logger(level=logging_level).logger
 
+config = Handlers.JSON.read("config")
+
 
 class FFF(commands.AutoShardedBot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.config = Handlers.JSON.read("config")
+        self.config = config
         self.bot_config = self.config['bot']
         self.session = aiohttp.ClientSession()
         self.logger = logger
+        self.cache = Cache()
+        self.database = Database(self.config['database'])
+        self.pool = None
         self.debug = debug
         self.title = self.bot_config['title']
 
@@ -46,16 +53,20 @@ class FFF(commands.AutoShardedBot):
 
     async def on_ready(self):
         # self.remove_command("help")
+        self.pool = await self.database.connect()
+        await self.update_cache()
         await self.load_extensions()
         await self.update_activity()
-        print(f"Logged in as {self.user} ({self.user.id}).")
+
+        self.logger.info(f"Logged in as {self.user} ({self.user.id}).")
         if self.debug:
             self.logger.critical("Starting in debug mode, do not use this in production!")
 
     async def close(self):
-        print("\nShutting down!")
+        self.logger.info("\nShutting down!")
         await super(FFF, self).close()
         await self.session.close()
+        await self.pool.close()
 
     async def on_message_edit(self, before, after):
         if after.author.bot:
@@ -64,6 +75,8 @@ class FFF(commands.AutoShardedBot):
 
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
+            pass
+        elif isinstance(error, commands.CheckFailure):
             pass
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("Invalid command arguments!")
@@ -99,8 +112,8 @@ class FFF(commands.AutoShardedBot):
     async def load_extensions(self):
         for extension in self.bot_extensions:
             self.load_extension(f"extensions.{extension}")
-            print(f"Loaded {extension}.")
-        print("Starting...")
+            self.logger.info(f"Loaded {extension}.")
+        self.logger.info("Starting...")
 
     async def update_activity(self):
         activity = discord.Activity(
@@ -109,6 +122,19 @@ class FFF(commands.AutoShardedBot):
         )
         await self.change_presence(activity=activity)
 
+    async def update_cache(self):
+        self.logger.debug("Updating cache...")
+        async with self.pool.acquire() as conn:
+            guild_data = await self.database.get_guild_data(conn)
+            guild_data_history = await self.database.get_guild_data_history(conn)
+            self.cache.set(
+                {
+                    "guild_data": guild_data,
+                    "guild_data_history": guild_data_history
+                }
+            )
+        self.logger.debug("Successfully updated the cache!")
+
 
 def get_pre(bot, message):
     bot_id = bot.user.id
@@ -116,4 +142,4 @@ def get_pre(bot, message):
     return prefixes
 
 
-fff = FFF(command_prefix=get_pre, owner_ids=(166630166825664512, 304979232814268417))
+fff = FFF(command_prefix=get_pre, owner_ids=tuple(config['bot']['owners']))

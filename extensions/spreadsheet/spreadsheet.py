@@ -1,5 +1,3 @@
-import asyncio
-import json
 from datetime import datetime
 
 from discord.ext import commands, tasks
@@ -16,7 +14,7 @@ def avg(rows: list, index: int):
     """
     total = 0
     for row in rows:
-        if type(row[index]) != str:
+        if type(row[index]) in (int, float):
             total += row[index]
 
     result = total / len(rows)
@@ -29,13 +27,8 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
     """
     def __init__(self, fff):
         self.fff = fff
-        self.skyblock = Handlers.SkyBlock(self.fff.config['hypixel']['key'], self.fff.session)
-        self.mojang = Handlers.Mojang(self.fff.session)
         self.spreadsheet = Handlers.Spreadsheet(self.fff.bot_config['spreadsheet_key'])
 
-        self.hypixel_guild_id = self.fff.config['hypixel']['guild_id']
-        self.min_total_slayer_xp = self.fff.config['requirements']['min_total_slayer_xp']
-        self.min_average_skill_level = self.fff.config['requirements']['min_average_skill_level']
         self.spreadsheet_loop.start()
 
     def cog_unload(self):
@@ -44,87 +37,31 @@ class Spreadsheet(commands.Cog, name="Spreadsheet"):
         """
         self.spreadsheet_loop.cancel()
 
-    @tasks.loop(minutes=30.0)
+    @tasks.loop(minutes=15.0)
     async def spreadsheet_loop(self):
         """
         Automatically gets the guild and player stats and updates them on the spreadsheet
         """
+        try:
+            guild_data = self.fff.cache.get()['guild_data']
+        except KeyError:
+            return  # This only happens when the bot starts since the data isn't cached yet
+
+        rows = []
         self.fff.logger.info("Updating spreadsheet information...")
         await self.spreadsheet.auth()
-        users = self.spreadsheet.get_all_users()
-        self.spreadsheet.append_row(
-            [
-                "don't edit",
-                "the spreadsheet",
-                "right now",
-                "or your",
-                "changes will",
-                "be overwritten",
-                "by the",
-                "bot -Antonio32A"
-            ]
-        )
 
-        hypixel_guild = await self.skyblock.get_guild(self.hypixel_guild_id)
-        rows = []
-
-        for member in hypixel_guild['members']:
-            uuid = member['uuid']
-            try:
-                username = await self.mojang.get_player_username(uuid)
-            except json.decoder.JSONDecodeError:
-                # I honestly have no idea why this even happens, but it might just be Mojang rateliminting us
-                username = "<UNKNOWN>"
-
-            try:
-                hypixel_profile = await self.skyblock.get_hypixel_profile(uuid)
-            except TypeError:
-                # I have no idea why this error happens, but if it does I'll just give it the Jayevarmen stats
-                hypixel_profile = await self.skyblock.get_hypixel_profile("fb768d64953945d495f32691adbb27c5")
-
-            try:
-                profiles = await self.skyblock.get_profiles(uuid)
-            except Exception as error:
-                self.fff.logger.error(error)
-                profiles = await self.skyblock.get_profiles("fb768d64953945d495f32691adbb27c5")  # Jayevarmen
-
-            try:
-                profile = self.skyblock.calculate_latest_profile(profiles, uuid)
-                average_skill_level = self.skyblock.calculate_profile_skills(
-                    profile,
-                    hypixel_profile,
-                    uuid
-                )['average_skill_level']
-                skill_average = round(float(average_skill_level), 1)
-                slayer_xp = self.skyblock.calculate_profile_slayers(profile, uuid)['total']
-
-                if skill_average >= self.min_average_skill_level and slayer_xp >= self.min_total_slayer_xp:
-                    passes_reqs = True
-                else:
-                    passes_reqs = False
-            except (KeyError, TypeError, ValueError):
-                skill_average = "something"
-                slayer_xp = "went"
-                passes_reqs = "wrong"
-
-            try:
-                discord_connection = hypixel_profile['socialMedia']['links']['DISCORD']
-            except KeyError:
-                discord_connection = ""
-
-            try:
-                paid = users[uuid]['paid']
-                paid_to = users[uuid]['paid_to']
-            except (TypeError, KeyError):
-                paid = False
-                paid_to = ""
-
-            await asyncio.sleep(2.5)  # Max 120 requests per minute, so we should send less than 2 per second
+        for member in guild_data.keys():
+            uuid = member
+            member = guild_data[uuid]
+            username = member['username']
+            discord_connection = member['discord_connection']
+            paid = member['paid']
+            paid_to = member['paid_to']
+            skill_average = member['skill_average']
+            slayer_xp = member['slayer_xp']
+            passes_reqs = member['passes_reqs']
             rows.append([uuid, username, discord_connection, paid, paid_to, skill_average, slayer_xp, passes_reqs])
-            self.fff.logger.debug(
-                f"[{str(len(rows))}] {username} | {uuid} | {discord_connection} | {paid} | {paid_to} | "
-                f"{skill_average} | {slayer_xp} | {passes_reqs}"
-            )
 
         self.spreadsheet.clear()
         self.spreadsheet.append_row(

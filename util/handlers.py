@@ -184,7 +184,7 @@ class Handlers:
             """
             Gets the Hypixel profile of a user
             :param (str) uuid: Player's UUID
-            :returns (dict) profiles: Player's Hypixel profile
+            :returns (dict) profile: Player's Hypixel profile
             """
             data = await self.api_request("player", {"key": self.key, "uuid": uuid})
             return data['player']
@@ -296,6 +296,22 @@ class Handlers:
             skill_levels['average_skill_level'] = sum(skill_levels.values()) / 8
             return skill_levels
 
+        def calculate_profile_skill_xp(self, profile: dict, uuid: str):
+            """
+            Calculates Hypixel SkyBlock profile's skill xp
+            :param (dict) profile: The profile which should be used to calculate Hypixel SkyBlock skill xp
+            :param (str) uuid: The UUID of the person to calculate the skill xp
+            :returns (list or None) skill_level_xp: The skill level xp, None if the skill API is off
+            """
+            player_profile = profile['members'][uuid]
+            skill_level_xp = {}
+            for skill in self.skills.keys():
+                try:
+                    skill_level_xp[skill] = player_profile[skill]
+                except KeyError:
+                    return None
+            return skill_level_xp
+
         @staticmethod
         def calculate_profile_slayers(profile: dict, uuid: str):
             """
@@ -371,3 +387,12 @@ class Handlers:
                     "candy_used": candy_used
                 }
             return final_pets
+
+        @staticmethod
+        def get_profile_name(profile: dict):
+            """
+            Gets the cute_name of a profile
+            :param (dict) profile: The profile to get the name of
+            :returns (str): The profile cute name
+            """
+            return profile['cute_name']
