@@ -74,6 +74,10 @@ class Contest(commands.Cog, name="Contest"):
         """
         sorted_player_history = []
         timestamps = list(player_history.keys())
+        for _, timestamp in enumerate(timestamps):
+            if type(timestamp) == "str":
+                timestamps[_] = round(timestamp)
+
         timestamps.sort(reverse=True)
         for timestamp in timestamps:
             sorted_player_history.append(player_history[timestamp])
