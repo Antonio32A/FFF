@@ -123,7 +123,7 @@ class Database:
                     experience_skill_foraging, experience_skill_taming, cute_name
                 )
                 VALUES (
-                    '{uuid}', '{member['username']}', '{member['discord_connection']}',
+                    '{uuid}', '{member['username']}', $1,
                     '{member['rank']}', {member['paid']}, '{member['paid_to']}', {member['skill_average']},
                     {member['slayer_xp']}, {member['passes_reqs']}, 
                     {member['skill_level_xp']['experience_skill_combat']},
@@ -136,7 +136,8 @@ class Database:
                     {member['skill_level_xp']['experience_skill_taming']},
                     '{member['cute_name']}'
                 )
-                """
+                """,
+                member['discord_connection']
             )
 
     @staticmethod
@@ -178,7 +179,7 @@ class Database:
                     )
                     VALUES (
                         {member['timestamp']},
-                        '{uuid}', '{member['username']}', '{member['discord_connection']}',
+                        '{uuid}', '{member['username']}', $1,
                         '{member['rank']}', {member['paid']}, '{member['paid_to']}', {member['skill_average']},
                         {member['slayer_xp']}, {member['passes_reqs']}, 
                         {member['skill_level_xp']['experience_skill_combat']},
@@ -191,7 +192,8 @@ class Database:
                         {member['skill_level_xp']['experience_skill_taming']},
                         '{member['cute_name']}'
                     )
-                    """
+                    """,
+                    member['discord_connection']
                 )
 
     @staticmethod
