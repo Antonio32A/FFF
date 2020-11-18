@@ -310,6 +310,8 @@ class Handlers:
                     skill_level_xp[skill] = player_profile[skill]
                 except KeyError:
                     return None
+            skill_level_xp['experience_skill_catacombs'] = \
+                player_profile['dungeons']['dungeon_types']['catacombs']['experience']
             return skill_level_xp
 
         @staticmethod

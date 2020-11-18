@@ -142,4 +142,8 @@ def get_pre(bot, message):
     return prefixes
 
 
-fff = FFF(command_prefix=get_pre, owner_ids=tuple(config['bot']['owners']))
+# these bots are made for private use so they won't have 100 servers, might just enable both
+intents = discord.Intents.default()
+intents.members = True
+intents.presences = True
+fff = FFF(command_prefix=get_pre, owner_ids=tuple(config['bot']['owners']), intents=intents)

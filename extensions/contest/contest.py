@@ -59,7 +59,10 @@ class Contest(commands.Cog, name="Contest"):
         for timestamp, guild_data in guild_history_data.items():
             try:
                 if guild_data[uuid]['cute_name'] == cute_name:
-                    player_history[timestamp] = guild_data[uuid]
+                    try:
+                        player_history[timestamp] = guild_data[uuid]
+                    except KeyError:
+                        pass
             except KeyError:
                 pass
 
@@ -80,7 +83,10 @@ class Contest(commands.Cog, name="Contest"):
 
         timestamps.sort(reverse=True)
         for timestamp in timestamps:
-            sorted_player_history.append(player_history[timestamp])
+            try:
+                sorted_player_history.append(player_history[timestamp])
+            except KeyError:
+                pass
         return sorted_player_history
 
     def get_leaderboard_for_skill(self, skill: str):
@@ -246,7 +252,8 @@ class Contest(commands.Cog, name="Contest"):
                 "experience_skill_enchanting": f"{self.emojis['enchanting']} | Enchanting",
                 "experience_skill_fishing": f"{self.emojis['fishing']} | Fishing",
                 "experience_skill_foraging": f"{self.emojis['foraging']} | Foraging",
-                "experience_skill_taming": f"{self.emojis['taming']} | Taming"
+                "experience_skill_taming": f"{self.emojis['taming']} | Taming",
+                "experience_skill_catacombs": f"{self.emojis['catacombs']} | Catacombs"
             }
 
             for skill in self.skills:

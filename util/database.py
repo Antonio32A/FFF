@@ -16,7 +16,8 @@ def format_member_data_to_sql(member: dict):
             "experience_skill_enchanting": -1,
             "experience_skill_fishing": -1,
             "experience_skill_foraging": -1,
-            "experience_skill_taming": -1
+            "experience_skill_taming": -1,
+            "experience_skill_catacombs": -1
         }
 
     if member['skill_average'] is None:
@@ -41,7 +42,7 @@ def format_member_data_to_json(member: list):
     member = list(member)
     try:
         i = 0
-        _ = member[18]
+        _ = member[19]
         # since we are formatting 2 different lists,
     except IndexError:
         i = 1
@@ -54,7 +55,8 @@ def format_member_data_to_json(member: list):
         "experience_skill_enchanting": member[14-i],
         "experience_skill_fishing": member[15-i],
         "experience_skill_foraging": member[16-i],
-        "experience_skill_taming": member[17-i]
+        "experience_skill_taming": member[17-i],
+        "experience_skill_catacombs": member[18-i]
     }
     if skill_level_xp["experience_skill_combat"] == -1:
         skill_level_xp = None
@@ -76,11 +78,11 @@ def format_member_data_to_json(member: list):
         "skill_level_xp": skill_level_xp,
         "slayer_xp": member[8-i],
         "passes_reqs": member[9-i],
-        "cute_name": member[18-i]
+        "cute_name": member[19-i]
     }
 
     try:
-        _ = member[18]
+        _ = member[19]
         new_member["timestamp"] = member[0]
     except IndexError:
         pass
@@ -120,7 +122,7 @@ class Database:
                     uuid, username, discord_connection, rank, paid, paid_to, skill_average, slayer_xp, passes_reqs, 
                     experience_skill_combat, experience_skill_mining, experience_skill_alchemy, 
                     experience_skill_farming, experience_skill_enchanting, experience_skill_fishing,
-                    experience_skill_foraging, experience_skill_taming, cute_name
+                    experience_skill_foraging, experience_skill_taming, experience_skill_catacombs, cute_name
                 )
                 VALUES (
                     '{uuid}', '{member['username']}', $1,
@@ -134,6 +136,7 @@ class Database:
                     {member['skill_level_xp']['experience_skill_fishing']}, 
                     {member['skill_level_xp']['experience_skill_foraging']},
                     {member['skill_level_xp']['experience_skill_taming']},
+                    {member['skill_level_xp']['experience_skill_catacombs']},
                     '{member['cute_name']}'
                 )
                 """,
@@ -175,7 +178,7 @@ class Database:
                         uuid, username, discord_connection, rank, paid, paid_to, skill_average, slayer_xp, passes_reqs, 
                         experience_skill_combat, experience_skill_mining, experience_skill_alchemy, 
                         experience_skill_farming, experience_skill_enchanting, experience_skill_fishing,
-                        experience_skill_foraging, experience_skill_taming, cute_name
+                        experience_skill_foraging, experience_skill_taming, experience_skill_catacombs, cute_name
                     )
                     VALUES (
                         {member['timestamp']},
@@ -190,6 +193,7 @@ class Database:
                         {member['skill_level_xp']['experience_skill_fishing']}, 
                         {member['skill_level_xp']['experience_skill_foraging']},
                         {member['skill_level_xp']['experience_skill_taming']},
+                        {member['skill_level_xp']['experience_skill_catacombs']},
                         '{member['cute_name']}'
                     )
                     """,

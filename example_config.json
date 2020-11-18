@@ -62,6 +62,7 @@
             "enchanting": "<:enchanting:0>",
             "alchemy": "<:alchemy:0>",
             "taming": "<:taming:0>",
+            "catacombs": "<:catacombs:0>",
             "profile": "<:profile:0>",
             "fairysouls": "<:fairysouls:0>",
             "bank": "<:bank:0>",
@@ -83,6 +84,7 @@
             "experience_skill_foraging",
             "experience_skill_taming"
         ],
-        "slayer_enabled": true
+        "slayer_enabled": true,
+        "catacombs_enabled": true
     }
 }
