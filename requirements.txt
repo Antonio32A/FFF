@@ -1,5 +1,5 @@
 discord.py~=1.5.1
-aiohttp~=3.7.2
+aiohttp~=3.7.0
 coloredlogs~=14.0
 asyncio~=3.4.3
 oauth2client~=4.1.3
