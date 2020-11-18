@@ -84,7 +84,6 @@
             "experience_skill_foraging",
             "experience_skill_taming"
         ],
-        "slayer_enabled": true,
-        "catacombs_enabled": true
+        "slayer_enabled": true
     }
 }
